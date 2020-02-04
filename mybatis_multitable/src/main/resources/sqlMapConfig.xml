@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--加载jdbc.properties文件-->
+    <properties resource="jdbc.properties"/>
+    <!--    设置是实体别名-->
+    <typeAliases>
+        <!--为单独类设置别名-->
+        <!--<typeAlias type="com.lagou.pojo.User" alias="user"/>-->
+
+        <!--批量设置实体类别名，为该包下的所有实体设置别名，并且不区分大小写-->
+        <package name="com.lagou.pojo"/>
+    </typeAliases>
+    <!--引入自定义拦截器-->
+    <plugins>
+        <plugin interceptor="com.lagou.plugin.MyPlugin">
+            <property name="name" value="tom"/>
+        </plugin>
+        <plugin interceptor="com.github.pagehelper.PageHelper">
+            <property name="dialect" value="mysql"/>
+        </plugin>
+        <plugin interceptor="tk.mybatis.mapper.mapperhelper.MapperInterceptor">
+            <!-- 指定当前通用mapper接口使用的是哪一个-->
+            <property name="mappers" value="tk.mybatis.mapper.common.Mapper"/>
+        </plugin>
+    </plugins>
+
+    <!--environments:运行环境-->
+    <environments default="development">
+        <!--指定当前环境名称-->
+        <environment id="development">
+            <!--当前事务由JDBC管理-->
+            <transactionManager type="JDBC"/>
+            <!--当前使用mybatis提供的连接池-->
+            <!--如果type是UNPOOLED,是不使用连接池,每次都会创建一个新的连接-->
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!--引入映射配置文件-->
+    <mappers>
+        <!--使用完全限定资源定位符-->
+        <!--<mapper url=""></mapper>-->
+
+        <!--使用映射接口实现类的完全限定类名-->
+        <!--<mapper class=""></mapper>-->
+
+        <!--将包内的映射器接口实现全部注册为映射器-->
+        <!--<package name=""/>-->
+
+
+        <!--使用package标签时 xml文件必须和mapper的路径一样：同包同名-->
+        <package name="com.lagou.mapper"/>
+        <!--使用注解sql可以加载mapper类，建议使用 <package name>-->
+        <!--<mapper class="com.lagou.mapper.IUserMapper"></mapper>-->
+    </mappers>
+
+</configuration>
